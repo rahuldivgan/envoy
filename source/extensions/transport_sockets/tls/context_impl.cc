@@ -152,6 +152,8 @@ ContextImpl::ContextImpl(Stats::Scope& scope, const Envoy::Ssl::ContextConfig& c
         !SSL_CTX_set1_curves_list(ctx.ssl_ctx_.get(), config.ecdhCurves().c_str())) {
       throw EnvoyException(absl::StrCat("Failed to initialize ECDH curves ", config.ecdhCurves()));
     }
+    
+    SSL_CTX_set1_sigalgs_list(ctx.ssl_ctx_.get(), "ECDSA+SHA256:RSA+SHA256:RSA-PSS+SHA512:RSA-PSS+SHA384:RSA-PSS+SHA256");
   }
 
   auto verify_mode = cert_validator_->initializeSslContexts(
